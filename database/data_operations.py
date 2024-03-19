@@ -13,7 +13,6 @@ session = Session()
 
 def insert_data(email="", ip=None):
     """ insert data into data base """
-
     e = Email(email_address = email, ip_address = ip)
     session.add(e)
     session.commit()
@@ -42,6 +41,7 @@ def get_data():
     except SQLAlchemyError as e:
         data_dict = None
     return data_dict
+
 def close_session():
     """ remove the session """
     session.close()

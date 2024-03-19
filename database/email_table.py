@@ -9,7 +9,7 @@ from sqlalchemy.orm import declarative_base
 from datetime import datetime
 
 
-engine = create_engine("mysql://root:Ahmede2*@localhost/hbnb_dev_db")
+engine = create_engine("mysql://root:Ahmede2*@localhost/hbnb_dev_db", pool_size=10, max_overflow=20)
 Base = declarative_base()
 
 

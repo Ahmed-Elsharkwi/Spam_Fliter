@@ -4,7 +4,8 @@ from data_operations import insert_data, close_session, get_data_with_email, get
 from sqlalchemy.exc import SQLAlchemyError
 
 try:
-    email = get_data_with_email("hass@gmail.com")
+    insert_data("ahmed@gmail.com")
+    email = get_data_with_email("MO@gmail.com")
     data = get_data()
     print(email)
     print(data)
