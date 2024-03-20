@@ -4,7 +4,7 @@ module which has all functions of operations
 which can be applied to database 
 """
 from sqlalchemy.orm import sessionmaker, Session
-from email_table import engine, Email
+from backend_code.database.email_table import engine, Email
 
 
 Session = sessionmaker(bind=engine)
