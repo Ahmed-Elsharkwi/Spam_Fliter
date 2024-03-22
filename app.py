@@ -2,16 +2,21 @@
 """
 the main module of the app
 """
-from backend_code.database.data_operations import close_session, get_data_with_email
+from backend_code.database.data_operations import close_session, get_data_with_email, get_data
 from backend_code.word_fliter import words_filter
-from flask import Flask, make_response, jsonify, request
+from flask import Flask, make_response, jsonify, request, render_template, make_response
 from flask_cors import CORS
 
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
-@app.route("/spam_filter", strict_slashes=False, methods=['POST'])
+@app.route("/spam_filter", strict_slashes=False, methods=['GET'])
+def reder_main_page():
+    """ reder the main page of spam filter """
+    return render_template("spam_filter.html")
+
+@app.route("/spam_filter/check", strict_slashes=False, methods=['POST'])
 def filter_content():
     """ filter the content and decide if the email is spam or ham """
     dict = {}
@@ -26,7 +31,13 @@ def filter_content():
         output = get_data_with_email(dict["email"])
         if output is not None:
             result = "Spam Email"
-    return result
+
+    return jsonify({"state": result})
+
+@app.route("/spam_filter/get_data", strict_slashes=False, methods=['GET'])
+def retieve_data():
+    """ get all data from the database """
+    return jsonify(get_data())
 
 @app.teardown_appcontext
 def teardown(exc):

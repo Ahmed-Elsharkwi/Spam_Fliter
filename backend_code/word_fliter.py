@@ -42,11 +42,10 @@ def words_filter(content="", email=""):
     
     for word in content:
         word = word.lower()
-        print(word, end=" ")
         if word in spam_words:
             percentage_ham *= float(info[word]["ham_result"])
             percentage_spam *= float(info[word]["spam_result"])
-    print(percentage_ham, percentage_spam)
+
     if percentage_spam > percentage_ham:
         existence = get_data_with_email(email)
         if existence is None:
@@ -54,5 +53,5 @@ def words_filter(content="", email=""):
         result = "Spam Email"
     else:
         result = "Not spam Email"
-    print(result)
+
     return result
