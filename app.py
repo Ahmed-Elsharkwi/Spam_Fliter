@@ -2,7 +2,7 @@
 """
 the main module of the app
 """
-from backend_code.database.data_operations import close_session, get_data_with_email, get_data
+from backend_code.database.data_operations import close_session, get_data_with_email, get_data, insert_data
 from backend_code.word_fliter import words_filter
 from flask import Flask, make_response, jsonify, request, render_template, make_response
 from flask_cors import CORS
@@ -33,6 +33,14 @@ def filter_content():
             result = "Spam Email"
 
     return jsonify({"state": result})
+
+@app.route("/spam_filter/add_email", strict_slashes=False, methods=['POST'])
+def add_email():
+    """ add email in case the user doesn't expect to get emails from this email address"""
+    email = request.json["email"]
+    if email is not None:
+        insert_data(email)
+    return jsonify({"state": "okay"})
 
 @app.route("/spam_filter/get_data", strict_slashes=False, methods=['GET'])
 def retieve_data():

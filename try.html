@@ -3,7 +3,6 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style_cheet.css') }}">
-<title> Spam Filter </title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <style>
     #popupWindow {
@@ -32,7 +31,6 @@
         position: relative;
         left: -4px;
     }
-    
 </style>
 </head>
 <body>
@@ -52,7 +50,7 @@
     <p id="displayText">Do expect to get email from </p>
     <div>
         <button id="Yes" onclick="handleClick_yes('Yes')" style="margin-bottom: 20px;">Yes</button>
-        <button id="No" onclick="handleClick_No('No')">No</button>
+        <button onclick="handleClick_No('No')">No</button>
     </div>
 </div>
 
@@ -77,64 +75,51 @@
             else{
                 var email = document.getElementById('email').value;
                 var content = document.getElementById('content').value;
-                var regex = /^[\w-]{5,}(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-                var email_format = regex.test(email);
-                var format_check = true
-                if (email_format == false) {
+                var regex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+                var tito = regex.test(email);
+                if (tito == false) {
                     alert("please Enter a valid email")
-                    format_check = false
                 }
-                content = content.toString();
-                content = content.replace(/[^a-zA-Z\s]/g, '');
-                console.log(content)
-                var regex_1 = /^(\b[^\s]+\b\s*){10,}$/
+                else {
+                    console.log(email, content)
+                setTimeout(function() {
+                        alert('Thank you for submitting');
+                    }, 25); 
+                let url = 'http://localhost:5000/spam_filter/check'; // Replace with your actual API endpoint
+                let data = {"email": email, "content": content}; // Replace with your actual data
 
-                var content_format = regex_1.test(content)
-                if ((content_format == false) && (email_format == true)){
-                    alert("please Enter at least ten words in the content box")
-                    format_check = false
-                }
-                if( format_check == true) {
-                    let url = 'http://localhost:5000/spam_filter/check'; // Replace with your actual API endpoint
-                    let data = {"email": email, "content": content}; // Replace with your actual data
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                setTimeout(function() {
+                    alert(data.state);
 
-                    fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(data)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                            if (data.state == "Not spam Email"){
-                                let displayText = document.getElementById('displayText');
-                                displayText.innerHTML = "Do expect to get email from " + email + " ?";
-                                document.getElementById('popupWindow').classList.add('show');
-
-                            }
-                            else{
-                                alert(data.state)
-                            }
-                    })
-                    .catch((error) => console.error('Error:', error));
-                }
+                    if (data.state == "Not spam Email"){
+                        let displayText = document.getElementById('displayText');
+                        displayText.innerHTML = "Do expect to get email from " + email + "?";
+                        document.getElementById('popupWindow').classList.add('show');
+                    }
+                }, 2000);
+            })
+                .catch((error) => console.error('Error:', error));
             }
-            
+            }
         });
     });
 
-    function handleClick_yes(answer){
+    function handleClick_yes(answer) {
+        alert('You clicked: ' + answer);
         document.getElementById('popupWindow').classList.remove('show');
-            setTimeout(function() {
-                alert("Not Spam Email")
-            }, 500); // Delay the alert by 0.5 seconds
     }
     function handleClick_No(answer) {
+        alert('You clicked: ' + answer);
         document.getElementById('popupWindow').classList.remove('show');
-            setTimeout(function() {
-                alert("Spam Email")
-            }, 1000);
         email = document.getElementById('email').value;
         let url = 'http://localhost:5000/spam_filter/add_email'; // Replace with your actual API endpoint
         let data = {"email": email}; // Replace with your actual data
