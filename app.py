@@ -25,14 +25,14 @@ def filter_content():
     for item in request.json:
         dict[item] = request.json[item]
     
-    result = words_filter(dict["content"], dict["email"])
+    result, ham, spam = words_filter(dict["content"], dict["email"])
 
     if result != "Spam Email":
         output = get_data_with_email(dict["email"])
         if output is not None:
             result = "Spam Email"
 
-    return jsonify({"state": result})
+    return jsonify({"state": result, "spam": spam, "ham": ham})
 
 @app.route("/spam_filter/add_email", strict_slashes=False, methods=['POST'])
 def add_email():

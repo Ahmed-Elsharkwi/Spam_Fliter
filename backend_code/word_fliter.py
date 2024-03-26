@@ -51,4 +51,4 @@ def words_filter(content="", email=""):
     else:
         result = "Not spam Email"
 
-    return result
+    return result, percentage_ham, percentage_spam

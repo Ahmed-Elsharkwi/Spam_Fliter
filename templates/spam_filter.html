@@ -85,11 +85,15 @@
                     format_check = false
                 }
                 content = content.toString();
-                content = content.replace(/[^a-zA-Z\s]/g, '');
+                content_1 = content.replace(/[^a-zA-Z\s]/g, '');
+                console.log(content_1)
                 console.log(content)
-                var regex_1 = /^(\b[^\s]+\b\s*){10,}$/
+                var content_format = true
+                if (content_1.length < 10){
+                    content_format = false
+                }
 
-                var content_format = regex_1.test(content)
+
                 if ((content_format == false) && (email_format == true)){
                     alert("please Enter at least ten words in the content box")
                     format_check = false
@@ -116,6 +120,7 @@
                             else{
                                 alert(data.state)
                             }
+			  console.log(data.spam, data.ham)
                     })
                     .catch((error) => console.error('Error:', error));
                 }
