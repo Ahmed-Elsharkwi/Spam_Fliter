@@ -14,6 +14,7 @@ app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route("/spam_filter", strict_slashes=False, methods=['GET'])
+@app.route("/", strict_slashes=False, methods=['GET'])
 def reder_main_page():
     """ reder the main page of spam filter """
     return render_template("spam_filter.html")
