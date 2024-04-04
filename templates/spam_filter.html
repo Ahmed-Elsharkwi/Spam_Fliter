@@ -60,71 +60,32 @@
     $(document).ready(function() {
         $('input[type="submit"]').click(function(e) {
             e.preventDefault(); // Prevent the form from submitting normally
-            var isValid = true;
-            $('input[type="text"]').each(function() {
-                if ($.trim($(this).val()) == '') {
-                    isValid = false;
-                }
-            });
-            $('textarea').each(function() {
-                if ($.trim($(this).val()) == '') {
-                    isValid = false;
-                }
-            });
+            var email = document.getElementById('email').value;
+            var content = document.getElementById('content').value;
+            let url = 'http://localhost:5000/spam_filter/check'; // Replace with your actual API endpoint
+            let data = {"email": email, "content": content}; // Replace with your actual data
 
-            if (isValid == false)
-                alert("All fields must be filled out");
-            else{
-                var email = document.getElementById('email').value;
-                var content = document.getElementById('content').value;
-                var regex = /^[\w-]{5,}(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-                var email_format = regex.test(email);
-                var format_check = true
-                if (email_format == false) {
-                    alert("please Enter a valid email")
-                    format_check = false
-                }
-                content = content.toString();
-                content_1 = content.replace(/[^a-zA-Z\s]/g, '');
-                console.log(content_1)
-                console.log(content)
-                var content_format = true
-                if (content_1.length < 10){
-                    content_format = false
-                }
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                     'Content-Type': 'application/json'
+                      },
+                     body: JSON.stringify(data)
+                   })
+                .then(response => response.json())
+                .then(data => {
+                       if (data.state == "Not spam Email"){
+                            let displayText = document.getElementById('displayText');
+                            displayText.innerHTML = "Do expect to get email from " + email + " ?";
+                            document.getElementById('popupWindow').classList.add('show');
 
-
-                if ((content_format == false) && (email_format == true)){
-                    alert("please Enter at least ten words in the content box")
-                    format_check = false
-                }
-                if( format_check == true) {
-                    let url = 'http://localhost:5000/spam_filter/check'; // Replace with your actual API endpoint
-                    let data = {"email": email, "content": content}; // Replace with your actual data
-
-                    fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(data)
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                            if (data.state == "Not spam Email"){
-                                let displayText = document.getElementById('displayText');
-                                displayText.innerHTML = "Do expect to get email from " + email + " ?";
-                                document.getElementById('popupWindow').classList.add('show');
-
-                            }
-                            else{
-                                alert(data.state)
-                            }
-			  console.log(data.spam, data.ham)
-                    })
-                    .catch((error) => console.error('Error:', error));
-                }
-            }
+                       }
+                       else{
+                           alert(data.state)
+                       }
+			console.log(data.spam, data.ham)
+                 })
+                .catch((error) => console.error('Error:', error));
             
         });
     });

@@ -6,6 +6,8 @@ from backend_code.database.data_operations import close_session, get_data_with_e
 from backend_code.word_fliter import words_filter
 from flask import Flask, make_response, jsonify, request, render_template, make_response
 from flask_cors import CORS
+import re
+from validate import validate
 
 
 app = Flask(__name__)
@@ -19,6 +21,9 @@ def reder_main_page():
 @app.route("/spam_filter/check", strict_slashes=False, methods=['POST'])
 def filter_content():
     """ filter the content and decide if the email is spam or ham """
+    valid = validate(request.json["email"], request.json["content"])
+    if (valid != "okay"):
+        return jsonify({"state": valid})
     dict = {}
     result = ""
     output = None
@@ -38,8 +43,13 @@ def filter_content():
 def add_email():
     """ add email in case the user doesn't expect to get emails from this email address"""
     email = request.json["email"]
-    if email is not None:
+    pattern = r"[\w-]{5,}(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}"
+    result = re.match(pattern, email)
+
+    if email is not None and result:
         insert_data(email)
+    else:
+            return jsonify({"state": "bad_request"})
     return jsonify({"state": "okay"})
 
 @app.route("/spam_filter/get_data", strict_slashes=False, methods=['GET'])
@@ -57,6 +67,6 @@ def not_found(error):
     """ handler for 404 errors """
     return make_response(jsonify({'error': 'Not found'}), 404)
 
-
-app.run(host='0.0.0.0', port=5000, threaded=True)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000, threaded=True)
 
