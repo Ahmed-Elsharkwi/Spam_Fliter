@@ -22,8 +22,8 @@
 5- open this link in your browser `http://127.0.0.1:5000`.\
 6- type the email address of the email which you recevied.\
 7- type the content of the email which you recevied.\
-8- the backend will recevie your the content of your email and check if the email is spam or not using two filters which are filter by words using `naive bayes algrothime` and filter by email address which means it will check if the email address of you the email is in spam emails list or not.\
-9- After checking your email if it spam or not. if the email is not spam you are going to see a message which will pop up and ask you `if you expect to get email from this email address`. if you pressed no it will means that email is a spam email and if you are going to get email from that email address the email will be spam.
+8- the backend will recevie your the content of your email and check if the email is spam or not  by filtering the words using `naive bayes algrothime` and filtering the email address by checking if the email address  is in spam emails list or not.\
+9- After checking your email if it spam or not. if the email is not spam you are going to see a message which will pop up asking you `if you expect to get email from this email address`. if you press no it will mean that email is a spam email. Any upcoming email from that email address will be detected as a spam email.
 ## Author
 
 - [Ahmed Elsharkwi](https://github.com/Ahmed-Elsharkwi)
