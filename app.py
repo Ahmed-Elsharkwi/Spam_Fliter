@@ -13,9 +13,15 @@ from validate import validate
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
-@app.route("/spam_filter", strict_slashes=False, methods=['GET'])
 @app.route("/", strict_slashes=False, methods=['GET'])
-def reder_main_page():
+def landing_page():
+    """ return the landing page"""
+    img_source = "/static/spam.jpg"
+    return render_template("landing_page.html", img_source=img_source)
+
+
+@app.route("/spam_filter", strict_slashes=False, methods=['GET'])
+def reder_filter_page():
     """ reder the main page of spam filter """
     return render_template("spam_filter.html")
 
